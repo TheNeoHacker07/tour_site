@@ -7,22 +7,51 @@ class Car(models.Model):
     name = models.CharField(max_length=15)
     capacity = models.IntegerField()
     photo = models.ImageField(upload_to='img/car')
+    description = models.TextField()
+    year = models.PositiveIntegerField()
+    wifi = models.BooleanField()
+    car_type = models.CharField(max_length=50)
+    air_codinting = models.BooleanField()
 
     def __str__(self):
         return self.name
 
 
+class TourThemes(models.Model):
+    group_themes = models.CharField()
+    description = models.TimeField()
+
+    def __str__(self):
+        return f"{self.group_size}--{self.description[:8]}"
+
+
+class TourType(models.Model):
+    with_gid = models.BooleanField()
+    description = models.TimeField()
+    country  = models.CharField()
+
+    def __str__(self):
+        return self.with_gid
+
+class TourGroupDetail(models.Model):
+    group_size = models.CharField()
+    description = models.TimeField()
+
+
 class Tour(models.Model):
-    car = models.OneToOneField(Car, on_delete=models.CASCADE)
     image = models.ImageField(upload_to='img/tour')
     price = models.DecimalField(decimal_places=2, max_digits=10)
+    car = models.OneToOneField(Car, on_delete=models.CASCADE)
     is_active = models.BooleanField(default=False)
     place = models.CharField(max_length=20)
-    start_date = models.DateTimeField()
-    end_date = models.DateTimeField()
+    duration = models.IntegerField()
+    tour_type = models.ForeignKey(TourType, on_delete=models.DO_NOTHING)
+    themes = models.ForeignKey(TourThemes, on_delete=models.DO_NOTHING)
+    group_detail = models.ForeignKey(TourGroupDetail, on_delete=models.DO_NOTHING)
     
     def __str__(self):
         return f'{self.user}-{self.place}'
+
 
 
 class Booking(models.Model):
@@ -32,7 +61,6 @@ class Booking(models.Model):
 
     def __str__(self):
         return f'{self.user}--{self.tour}'
-
 
 
 class Review(models.Model):
@@ -52,4 +80,7 @@ class Review(models.Model):
 
     def __str__(self) -> str:
         return f'review {self.user}-{self.name}'
+
+
+
 

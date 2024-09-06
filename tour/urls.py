@@ -10,7 +10,7 @@ urlpatterns = [
     path('booking_create/', BookingCreate.as_view()),
     path('booking_delete/<int:pk>/', BookingDelete.as_view()),
     path('booking_update/<int:pk>/', BookingUpdate.as_view()),
-    path('review_create/', CarRetrieve.as_view()),
+    path('review_create/', CreateReview.as_view()),
     path('review_delete/', DeleteReview.as_view())
 ]
 
