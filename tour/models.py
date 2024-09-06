@@ -48,6 +48,8 @@ class Tour(models.Model):
     tour_type = models.ForeignKey(TourType, on_delete=models.DO_NOTHING)
     themes = models.ForeignKey(TourThemes, on_delete=models.DO_NOTHING)
     group_detail = models.ForeignKey(TourGroupDetail, on_delete=models.DO_NOTHING)
+    start = models.DateTimeField()
+    end = models.DateTimeField()
     
     def __str__(self):
         return f'{self.user}-{self.place}'
