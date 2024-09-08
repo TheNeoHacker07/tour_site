@@ -7,35 +7,39 @@ class Car(models.Model):
     name = models.CharField(max_length=15)
     capacity = models.IntegerField()
     photo = models.ImageField(upload_to='img/car')
-    description = models.TextField()
-    year = models.PositiveIntegerField()
-    wifi = models.BooleanField()
-    car_type = models.CharField(max_length=50)
-    air_codinting = models.BooleanField()
+    description = models.TextField(default='')
+    year = models.PositiveIntegerField(default=0000)
+    wifi = models.BooleanField(default=False)
+    car_style = models.CharField(max_length=50, default='sedan')
+    air_codinting = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
 
 
 class TourThemes(models.Model):
-    group_themes = models.CharField()
-    description = models.TimeField()
+    group_themes = models.CharField(max_length=100)  # Added max_length
+    description = models.TextField()  # Changed to TextField
 
     def __str__(self):
-        return f"{self.group_size}--{self.description[:8]}"
+        return f"{self.group_themes}--{self.description[:8]}"
 
 
 class TourType(models.Model):
     with_gid = models.BooleanField()
-    description = models.TimeField()
-    country  = models.CharField()
+    description = models.TextField()  # Changed to TextField
+    country = models.CharField(max_length=100)  # Added max_length
 
     def __str__(self):
-        return self.with_gid
+        return f'{self.country} - With Guide: {self.with_gid}'
+
 
 class TourGroupDetail(models.Model):
-    group_size = models.CharField()
-    description = models.TimeField()
+    group_size = models.CharField(max_length=50)  # Added max_length
+    description = models.TextField()  # Changed to TextField
+
+    def __str__(self):
+        return f'{self.group_size} - {self.description[:8]}'
 
 
 class Tour(models.Model):
@@ -44,16 +48,15 @@ class Tour(models.Model):
     car = models.OneToOneField(Car, on_delete=models.CASCADE)
     is_active = models.BooleanField(default=False)
     place = models.CharField(max_length=20)
-    duration = models.IntegerField()
-    tour_type = models.ForeignKey(TourType, on_delete=models.DO_NOTHING)
-    themes = models.ForeignKey(TourThemes, on_delete=models.DO_NOTHING)
-    group_detail = models.ForeignKey(TourGroupDetail, on_delete=models.DO_NOTHING)
-    start = models.DateTimeField()
-    end = models.DateTimeField()
-    
-    def __str__(self):
-        return f'{self.user}-{self.place}'
+    duration = models.IntegerField(default=1)
+    tour_type = models.ForeignKey(TourType, default=1,on_delete=models.CASCADE)
+    themes = models.ForeignKey(TourThemes, default=1,on_delete=models.CASCADE)
+    group_detail = models.ForeignKey(TourGroupDetail, default=1,on_delete=models.CASCADE)
+    start_date = models.DateTimeField()
+    end_date = models.DateTimeField()
 
+    def __str__(self):
+        return f'{self.place} - {self.price}'
 
 
 class Booking(models.Model):
@@ -62,7 +65,7 @@ class Booking(models.Model):
     booked_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f'{self.user}--{self.tour}'
+        return f'{self.author}--{self.tour}'
 
 
 class Review(models.Model):
@@ -76,12 +79,11 @@ class Review(models.Model):
         (4, '4'),
         (5, '5'),
     ]
-
     mark = models.PositiveIntegerField(choices=RATING_CHOICES)
 
+    def __str__(self):
+        return f'review {self.author}-{self.name}'
 
-    def __str__(self) -> str:
-        return f'review {self.user}-{self.name}'
 
 
 
