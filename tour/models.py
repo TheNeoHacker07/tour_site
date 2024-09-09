@@ -45,10 +45,10 @@ class TourGroupDetail(models.Model):
 class Tour(models.Model):
     image = models.ImageField(upload_to='img/tour')
     price = models.DecimalField(decimal_places=2, max_digits=10)
-    car = models.OneToOneField(Car, on_delete=models.CASCADE)
+    # car = models.OneToOneField(Car, on_delete=models.CASCADE)
     is_active = models.BooleanField(default=False)
     place = models.CharField(max_length=20)
-    duration = models.IntegerField(default=1)
+    # duration = models.IntegerField(default=1)
     tour_type = models.ForeignKey(TourType, default=1,on_delete=models.CASCADE)
     themes = models.ForeignKey(TourThemes, default=1,on_delete=models.CASCADE)
     group_detail = models.ForeignKey(TourGroupDetail, default=1,on_delete=models.CASCADE)
@@ -60,12 +60,16 @@ class Tour(models.Model):
 
 
 class Booking(models.Model):
-    author = models.ForeignKey(User, on_delete=models.CASCADE, blank=True)
+    first_name = models.CharField(max_length=20)
+    second_name = models.CharField(max_length=20)
+    phone_number = models.TextField()
+    duration = models.IntegerField(default=1)
     tour = models.ForeignKey(Tour, on_delete=models.CASCADE)
+    car = models.OneToOneField(Car, on_delete=models.CASCADE)
     booked_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f'{self.author}--{self.tour}'
+        return f'{self.car}--{self.tour}'
 
 
 class Review(models.Model):
