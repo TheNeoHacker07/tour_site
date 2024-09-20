@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from django_filters.rest_framework import DjangoFilterBackend
-from .models import Tour, Booking, Car
+from .models import Tour, Booking, Car, Review
 from .serializer import TourSerializer, CarSerializer, BookingSerializer, ReviewSerializer
 from .filters import TourFilter
 from .permissions import IsOwnerOrReadOnly
@@ -68,8 +68,13 @@ class CreateReview(generics.CreateAPIView):
     serializer_class = ReviewSerializer
     permission_classes = [IsOwnerOrReadOnly, IsAuthenticated]
 
+class GetReview(generics.ListAPIView):
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+    permission_classes = [AllowAny]
+    
 class DeleteReview(generics.DestroyAPIView):
-    queryset = Booking.objects.all()
+    queryset = Review.objects.all()
     serializer_class = ReviewSerializer
     permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
     lookup_field = "pk"

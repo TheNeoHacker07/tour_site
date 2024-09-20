@@ -3,10 +3,12 @@ from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
+
+
 class Car(models.Model):
     name = models.CharField(max_length=15)
     capacity = models.IntegerField()
-    photo = models.ImageField(upload_to='img/car')
+    # photo = models.ImageField(upload_to='img/car')
     description = models.TextField(default='')
     year = models.PositiveIntegerField(default=0000)
     wifi = models.BooleanField(default=False)
@@ -15,7 +17,10 @@ class Car(models.Model):
 
     def __str__(self):
         return self.name
-
+    
+class CarImage(models.Model):
+    image = models.ImageField(upload_to='img')
+    car = models.ForeignKey(Car, on_delete=models.CASCADE)
 
 class TourThemes(models.Model):
     group_themes = models.CharField(max_length=100)  # Added max_length
@@ -43,29 +48,33 @@ class TourGroupDetail(models.Model):
 
 
 class Tour(models.Model):
-    image = models.ImageField(upload_to='img/tour')
+    
     price = models.DecimalField(decimal_places=2, max_digits=10)
     # car = models.OneToOneField(Car, on_delete=models.CASCADE)
     is_active = models.BooleanField(default=False)
     place = models.CharField(max_length=20)
     # duration = models.IntegerField(default=1)
-    tour_type = models.ForeignKey(TourType, default=1,on_delete=models.CASCADE)
-    themes = models.ForeignKey(TourThemes, default=1,on_delete=models.CASCADE)
-    group_detail = models.ForeignKey(TourGroupDetail, default=1,on_delete=models.CASCADE)
+    tour_type = models.ForeignKey(TourType, on_delete=models.CASCADE)
+    themes = models.ForeignKey(TourThemes, on_delete=models.CASCADE)
+    group_detail = models.ForeignKey(TourGroupDetail,on_delete=models.CASCADE)
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
 
     def __str__(self):
         return f'{self.place} - {self.price}'
 
+class Image(models.Model):
+    img = models.ImageField(upload_to='img')
+    tour = models.ForeignKey(Tour, on_delete=models.CASCADE)
+
 
 class Booking(models.Model):
-    first_name = models.CharField(max_length=20)
-    second_name = models.CharField(max_length=20)
-    phone_number = models.TextField()
+    first_name = models.CharField(max_length=20,default='')
+    second_name = models.CharField(max_length=20,default='')
+    phone_number = models.TextField(default='')
     duration = models.IntegerField(default=1)
-    tour = models.ForeignKey(Tour, on_delete=models.CASCADE)
-    car = models.OneToOneField(Car, on_delete=models.CASCADE)
+    tour = models.ForeignKey(Tour, default=None, on_delete=models.CASCADE)
+    car = models.OneToOneField(Car, default=None,on_delete=models.CASCADE)
     booked_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
