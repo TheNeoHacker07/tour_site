@@ -20,7 +20,7 @@ class Car(models.Model):
     
 class CarImage(models.Model):
     image = models.ImageField(upload_to='img')
-    car = models.ForeignKey(Car, on_delete=models.CASCADE)
+    # car = models.ForeignKey(Car, on_delete=models.CASCADE)
 
 class TourThemes(models.Model):
     group_themes = models.CharField(max_length=100)  # Added max_length
